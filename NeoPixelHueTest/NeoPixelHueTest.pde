@@ -5,12 +5,13 @@ OPC opc;
 int size=5;
 float hueOffset = 0.0;
 int previousFrameStartTime = 0;
+float stretch = 2.0;
 
 void setup()
 {
   size(300, 300);
   colorMode(HSB, width, height, height);
-  opc = new OPC(this, "127.0.0.1", 7890);
+  opc = new OPC(this, "raspberrypi.local", 7890);
   noStroke();
 
   // Set up your LED mapping here
@@ -27,9 +28,14 @@ void draw()
   {
     for(int j=0; j<height; j+=size)
     {
-      fill(((i/2) + hueOffset) % width, mouseY, j);
+      fill(((i/stretch) + hueOffset) % width, mouseY, j);
       rect(i, j, size, size);
     }
   }
+}
+
+void mouseWheel(MouseEvent event) {
+  float e = event.getCount();
+  stretch = constrain(stretch * (1.0 + e/20.0), 0.5, 8.0);
 }
 
